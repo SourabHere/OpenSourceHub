@@ -1,0 +1,15 @@
+{% extends 'basic.html' %}
+
+{% block content %}
+
+
+<p>Are you sure?</p>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <a href="{% url 'projects' %}">Go back</a>
+<input type="Submit" value="Confirm">
+
+</form>
+
+{% endblock %}
