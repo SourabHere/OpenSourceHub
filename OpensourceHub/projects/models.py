@@ -1,5 +1,6 @@
 from email.policy import default
 from tkinter.tix import Tree
+import black
 from django.db import models
 import uuid
 from users.models import Profile
@@ -22,6 +23,26 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering=['-vote_ratio','-vote_total','title']
+
+    @property
+    def reviewers(self):
+        queryset=self.review_set.all().values_list('owner__id')
+        return queryset
+
+    @property
+    def getVoteCount(self):
+        reviews= self.review_set.all()
+        upVotes=reviews.filter(value='up').count()
+
+        totalVotes=reviews.count()
+
+        ratio=(upVotes/totalVotes)*100
+        self.vote_total=totalVotes
+        self.vote_ratio=ratio 
+        self.save()
+
     @property
     def imageurl(self):
         try:
@@ -32,18 +53,22 @@ class Project(models.Model):
 
 class Review(models.Model):
     VOTE_TYPE=(
-        ("up","Up_vote"),
-        ("down","Down_vote"),
+        ('up','Up_vote'),
+        ('down','Down_vote'),
     )
 
+    owner=models.ForeignKey(Profile,on_delete=models.CASCADE,null=True)
     Project=models.ForeignKey(Project,on_delete=models.CASCADE)
     body=models.TextField(null=True,blank=True)
-    value=models.CharField(max_length=200,choices=VOTE_TYPE)
+    value=models.CharField(max_length=200,choices=VOTE_TYPE,blank=True,null=True)
     created=models.DateTimeField(auto_now_add=True)
     id=models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True,editable=False)
 
+    class Meta:
+        unique_together=[['owner','Project']]
+
     def __str__(self):
-        self.value
+        return self.value
 
 class Tag(models.Model):
     name=models.CharField(max_length=200)
