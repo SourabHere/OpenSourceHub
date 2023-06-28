@@ -1,5 +1,11 @@
 # OpenSourceHub
 
+<div align="center">
+  <a>
+    <img src="https://github.com/SourabHere/OpenSourceHub/blob/60313167cb1a5d26faaa1696d1f40f9604feb2f4/OpensourceHub/static/images/logo.png" alt="Logo" width="200">
+  </a>
+</div>
+
 An open-source social media website built with Django, SQLite, and Python. This platform allows users to explore and engage with various open-source projects. Users can discover projects, like or dislike them, and even contribute by adding their own open-source projects to the platform.
 
 ## Features
